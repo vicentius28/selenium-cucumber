@@ -1,35 +1,32 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class VentasPage {
-    private final String username = "admin", password  = "pointofsale";
     WebDriver driver;
 
     public VentasPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void login(){
-        driver.get("http://localhost/ospos/public/login");
-        driver.findElement(By.id("input-username")).sendKeys(username);
-        driver.findElement(By.id("input-password")).sendKeys(password);
-        driver.findElement(By.name("login-button")).click();
-    }
+    public boolean loadVentas() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-    public boolean loadVentas(){
-        if(!driver.findElement(By.id("home_module_list")).isDisplayed())
-        {
+        try {
+            // Espera hasta que el módulo de inicio esté visible
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("home_module_list")));
+
+            // Luego espera a que el módulo de ventas (div[7]) esté presente y clickeable
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='home_module_list']/div[7]"))).click();
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar el módulo de ventas: " + e.getMessage());
             return false;
         }
-        driver.findElement(By.xpath("//*[@id='home_module_list']/div[7]")).click();
-
-        return true;
     }
-
-
 }

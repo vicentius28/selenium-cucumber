@@ -2,38 +2,65 @@ package stepDefinitions;
 
 import hooks.Hooks;
 import io.cucumber.java.en.*;
-import io.cucumber.java.ro.Cand;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
 import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.LoginPage;
+
+import java.time.Duration;
+
+import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
 
-    WebDriver driver = Hooks.getDriver();
+    private final WebDriver driver = Hooks.getDriver();
+    private LoginPage loginPage;
+
+    private void delay() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.out.println("Delay interrumpido: " + e.getMessage());
+        }
+    }
+
 
     @Given("el usuario está en la página de login")
-    public void el_usuario_esta_en_login() {
-        driver.get("http://localhost/ospos/public/login");
-        driver.manage().window().setSize(new Dimension(1054, 800));
+    public void usuarioEnPaginaLogin() {
+        loginPage = new LoginPage(driver);
+        loginPage.open();
     }
 
     @When("ingresa credenciales válidas")
-    public void ingresa_credenciales_validas() {
-        driver.findElement(By.id("input-username")).sendKeys("admin");
-        driver.findElement(By.id("input-password")).sendKeys("pointofsale");
-        driver.findElement(By.name("login-button")).click();
+    public void ingresarCredencialesValidas() {
+        loginPage.loginAsAdmin();
+    }
+
+    @When("ingresa credenciales inválidas")
+    public void ingresarCredencialesInvalidas() {
+        loginPage.login("admin", "clave_incorrecta");
     }
 
     @Then("accede al sistema correctamente")
-    public void accede_sistema_correctamente() {
-        boolean apareceLogout = driver.findElement(By.linkText("Logout")).isDisplayed();
-        Assert.assertTrue("No se logró acceder correctamente al sistema", apareceLogout);
-    }
-    @And("cierra sesión")
-    public void cerrar_sesion() {
-        driver.findElement(By.linkText("Logout")).click();
+    public void accesoCorrectoAlDashboard() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        boolean textoVisible = wait.until(ExpectedConditions
+                .textToBePresentInElementLocated(
+                        By.cssSelector("h3.text-center"),
+                        "Welcome to OSPOS"
+                ));
+        delay();
+        Assert.assertTrue("No se accedió correctamente al dashboard", textoVisible);
     }
 
 
+
+    @Then("se muestra un mensaje de error")
+    public void mostrarMensajeDeError() {
+        assertTrue("No se mostró mensaje de error", loginPage.isLoginErrorVisible());
+    }
 }
