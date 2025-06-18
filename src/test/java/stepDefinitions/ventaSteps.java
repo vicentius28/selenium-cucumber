@@ -3,7 +3,6 @@ package stepDefinitions;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.WebDriver;
 import org.junit.Assert;
-
 import hooks.Hooks;
 import pages.LoginPage;
 import pages.VentasPage;
@@ -27,26 +26,14 @@ public class ventaSteps {
         Assert.assertTrue("❌ No se pudo acceder al módulo de ventas", ventasPage.loadVentas());
     }
 
-    // Puedes reactivar los siguientes pasos si los vas a usar:
-    /*
-    @When("realizo la venta con la condicion")
-    public void realizo_la_venta_con_la_condicion() {
-        System.out.println("Simular venta");
+    @Then("agrega item a venta")
+    public void agregaItemVenta() {
+        Assert.assertTrue(ventasPage.agregaItem());
+    }
+    @And("ejecuta pago")
+    public void ejecutaPago() throws InterruptedException {
+        Assert.assertTrue(ventasPage.pagar());
     }
 
-    @When("..... esta accion se encuentra en el feature  {string}")
-    public void esta_accion_se_encuentra_en_el_feature(String detalle) {
-        System.out.println("Acción desde feature: " + detalle);
-    }
 
-    @Then("aqui pasa la condicion que estamos validando")
-    public void aqui_pasa_la_condicion_que_estamos_validando() {
-        System.out.println("Validación exitosa");
-    }
-
-    @Then("..... otras acciones secundarias")
-    public void otras_acciones_secundarias() {
-        System.out.println("Validaciones secundarias");
-    }
-    */
 }

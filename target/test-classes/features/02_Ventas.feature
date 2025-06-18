@@ -1,4 +1,3 @@
-@ventas
 Feature: realizar venta en sistema ospos
 
   @2 @TEST_ATC_0020 @regresivo
