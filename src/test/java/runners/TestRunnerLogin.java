@@ -8,13 +8,12 @@ import io.cucumber.junit.CucumberOptions;
 @CucumberOptions(
         features = {
                 "src/test/resources/features/Login",
-                "src/test/resources/features/Logout"
         },
         glue = {"stepDefinitions", "hooks"},
-        tags = "@login or @logout",
+        tags = "@login",
         plugin = {
                 "pretty",
-                "html:target/reports/login-logout-report.html"
+                "html:target/reports/login-report.html"
         },
         monochrome = true
 )
