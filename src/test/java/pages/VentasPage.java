@@ -3,34 +3,24 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import java.util.List;
 
 public class VentasPage {
     WebDriver driver;
-    private final String username = "admin", password  = "pointofsale";
-    private String itemName = "TestItem2";
+    private final String itemName = "TestItem2";
     By itemInput = By.id("item");
     By salesNavItem  = By.xpath("//*[@id='home_module_list']/div[7]");
     By quantityInput = By.xpath("//*[@id='cart_contents']/tr[1]/td[5]/input");
-    By tipoPagoBtn = By.xpath("//*[@id='add_payment_form']/table/tbody/tr[1]/td[2]/div"); //Bootstrap hace que los divs sean input tipo select
     By agregarPagoBtn = By.id("add_payment_button");
     By finalizarPagoButton = By.id("finish_sale_button");
     By codigoDeBarraBoleta = By.xpath("//*[@id='barcode']/img");
+    By tipoPagoBtn = By.cssSelector("button[data-id='payment_types']");
+
     public VentasPage(WebDriver driver) {
         this.driver = driver;
-    }
-
-    public void login(){
-        driver.get("http://localhost/ospos/public/login");
-        driver.findElement(By.id("input-username")).sendKeys(username);
-        driver.findElement(By.id("input-password")).sendKeys(password);
-        driver.findElement(By.name("login-button")).click();
     }
 
     public boolean loadVentas() {
@@ -41,7 +31,7 @@ public class VentasPage {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("home_module_list")));
 
             // Luego espera a que el módulo de ventas (div[7]) esté presente y clickeable
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='home_module_list']/div[7]"))).click();
+            wait.until(ExpectedConditions.elementToBeClickable(salesNavItem)).click();
 
             return true;
         } catch (Exception e) {
@@ -71,26 +61,17 @@ public class VentasPage {
 
     }
 
-    public boolean pagar() {
-
+    public boolean pagar(String tipoPago) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        By opcionPago = By.xpath("//div[@class='dropdown-menu open']//span[contains(text(), '"+ tipoPago + "')]");//Bootstrap hace que los divs sean input tipo select
         try {
-            driver.findElement(tipoPagoBtn).click();
-            driver.findElement(By.id("bs-select-2-1")).click();
 
-            //selectPayment.selectByVisibleText("Debit Card");
-            List<WebElement> list = driver.findElements(By.xpath("//*[@id='bs-select-2']/ul"));
-            for (WebElement ele : list)
-            {
-                System.out.println("Values " + ele.getAttribute("innerHTML"));
+            WebElement dropdownButton = wait.until(ExpectedConditions.elementToBeClickable(tipoPagoBtn));
+            dropdownButton.click();
 
-                if (ele.getAttribute("innerHTML").contains("JavaScript")) {
-                    ele.click();
+            WebElement option = wait.until(ExpectedConditions.elementToBeClickable(opcionPago));
+            option.click();
 
-                    break;
-
-                }
-
-            }
             driver.findElement(agregarPagoBtn).click();
             Thread.sleep(2000);
             driver.findElement(finalizarPagoButton).click();
