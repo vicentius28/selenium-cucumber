@@ -30,15 +30,6 @@ public class LoginPage {
         driver.findElement(loginButton).click();
     }
 
-    // Login como usuario admin por defecto
-    public void loginAsAdmin() {
-        login("admin", "pointofsale");
-    }
-
-    public boolean isLoginSuccessful() {
-        return !driver.findElements(dashboardModuleList).isEmpty();
-    }
-
     public boolean isLoginErrorVisible() {
         return !driver.findElements(loginError).isEmpty();
     }

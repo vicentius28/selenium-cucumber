@@ -18,30 +18,15 @@ public class LoginSteps {
     private final WebDriver driver = Hooks.getDriver();
     private LoginPage loginPage;
 
-    private void delay() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.out.println("Delay interrumpido: " + e.getMessage());
-        }
-    }
-
-
     @Given("el usuario está en la página de login")
     public void usuarioEnPaginaLogin() {
         loginPage = new LoginPage(driver);
         loginPage.open();
     }
 
-    @When("ingresa credenciales válidas")
-    public void ingresarCredencialesValidas() {
-        loginPage.loginAsAdmin();
-    }
-
-    @When("ingresa credenciales inválidas")
-    public void ingresarCredencialesInvalidas() {
-        loginPage.login("admin", "clave_incorrecta");
+    @When("ingresa el usuario {string} y la contraseña {string}")
+    public void ingresarCredenciales(String usuario, String contrasenia) {
+        loginPage.login(usuario, contrasenia);
     }
 
     @Then("accede al sistema correctamente")
@@ -53,10 +38,13 @@ public class LoginSteps {
                         By.cssSelector("h3.text-center"),
                         "Welcome to OSPOS"
                 ));
-        delay();
+
+        wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        By.cssSelector("h3.text-center")));
+
         Assert.assertTrue("No se accedió correctamente al dashboard", textoVisible);
     }
-
 
 
     @Then("se muestra un mensaje de error")

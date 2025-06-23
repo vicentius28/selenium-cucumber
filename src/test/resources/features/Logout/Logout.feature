@@ -2,7 +2,7 @@ Feature: Logout funcionalidad
 
   Background:
     Given el usuario está en la página de login
-    And ingresa credenciales válidas
+    When ingresa el usuario "admin" y la contraseña "pointofsale"
     And accede al sistema correctamente
 
   @logout

@@ -1,5 +1,6 @@
 package hooks;
 
+import driver.DriverFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -17,28 +18,18 @@ public class Hooks {
     @Before
     public void setUp() {
         System.out.println("========== INICIANDO ESCENARIO ==========");
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
+        driver = DriverFactory.getDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     @After
     public void tearDown(Scenario scenario) {
-        if (scenario.isFailed()) {
-            System.out.println("❌ ESCENARIO FALLÓ: " + scenario.getName());
-            // Adjunta screenshot si falla
-            if (driver instanceof TakesScreenshot) {
-                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-                scenario.attach(screenshot, "image/png", "screenshot");
-            }
-        } else {
-            System.out.println("✅ ESCENARIO COMPLETADO: " + scenario.getName());
+        if (scenario.isFailed() && driver instanceof TakesScreenshot) {
+            byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            scenario.attach(screenshot, "image/png", "screenshot");
         }
 
-        if (driver != null) {
-            driver.quit();
-        }
-
+        DriverFactory.quitDriver();
         System.out.println("========== FINALIZANDO ESCENARIO ==========\n");
     }
 

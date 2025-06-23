@@ -10,7 +10,6 @@ import io.cucumber.junit.CucumberOptions;
                 "src/test/resources/features/Login",
         },
         glue = {"stepDefinitions", "hooks"},
-        tags = "@login",
         plugin = {
                 "pretty",
                 "html:target/reports/login-report.html"
