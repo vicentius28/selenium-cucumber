@@ -2,6 +2,10 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class CustomerPage {
     private final WebDriver driver;
@@ -13,6 +17,8 @@ public class CustomerPage {
     private final By submitButton = By.xpath("//button[@id='submit']");
     private final By errorFirstName = By.xpath("//label[@id='first_name-error']");
     private final By errorLastName = By.xpath("//label[@id='last_name-error']");
+    private final By successMessage = By.cssSelector("span[data-notify='message'']");
+
 
     public CustomerPage(WebDriver driver) {
         this.driver = driver;
@@ -26,12 +32,9 @@ public class CustomerPage {
         driver.findElement(customerModule).click();
     }
 
-    public void enterFirstName(String name) {
+    public void registerCustomer(String name, String lastName) {
         driver.findElement(firstNameInput).sendKeys(name);
-    }
-
-    public void enterLastName(String name) {
-        driver.findElement(lastNameInput).sendKeys(name);
+        driver.findElement(lastNameInput).sendKeys(lastName);
     }
 
     public void submitForm() {
@@ -39,10 +42,18 @@ public class CustomerPage {
     }
 
     public boolean isFirstNameErrorVisible() {
-        return !driver.findElements(errorFirstName).isEmpty();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorFirstName)).isDisplayed();
     }
 
     public boolean isLastNameErrorVisible() {
         return !driver.findElements(errorLastName).isEmpty();
+    }
+
+    public boolean isCustomerRegistered() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        return wait.until(ExpectedConditions
+                        .visibilityOfElementLocated(By.cssSelector("span[data-notify='message']")))
+                .isDisplayed();
     }
 }

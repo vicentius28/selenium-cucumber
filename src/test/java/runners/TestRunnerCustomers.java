@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
         features = "src/test/resources/features/Customers",
         glue = {"stepDefinitions", "hooks"},
         plugin = {"pretty", "html:target/reports/customers-report.html"},
-        monochrome = true,
-        tags = "@cliente_obligatorio"
+        monochrome = true
 )
 public class TestRunnerCustomers {}
