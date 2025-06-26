@@ -18,4 +18,5 @@ Feature: Clientes
       Then accede al sistema correctamente
       And el usuario ingresa al modulo customers
       And el usuario abre el formulario de nuevo cliente
-      And el usuario ingresa su nombre "Pepe", apellido "Doe" y presiona submit
+      And el usuario ingresa su nombre "Pepe_test123", apellido "Doe" y presiona submit
+      Then se muestra mensaje de exito tras registro

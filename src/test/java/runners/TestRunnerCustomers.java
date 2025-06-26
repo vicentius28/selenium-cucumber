@@ -10,5 +10,6 @@ import org.junit.runner.RunWith;
         glue = {"stepDefinitions", "hooks"},
         plugin = {"pretty", "html:target/reports/customers-report.html"},
         monochrome = true
+
 )
 public class TestRunnerCustomers {}

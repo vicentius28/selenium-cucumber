@@ -1,4 +1,4 @@
-package pages;
+package pages.auth;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +10,6 @@ public class LoginPage {
     private final By usernameInput = By.id("input-username");
     private final By passwordInput = By.id("input-password");
     private final By loginButton = By.name("login-button");
-    private final By dashboardModuleList = By.id("home_module_list");
     private final By loginError = By.cssSelector(".alert-danger");
 
     // Constructor

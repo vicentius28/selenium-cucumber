@@ -11,6 +11,7 @@ import java.time.Duration;
 public class VentasPage {
     WebDriver driver;
     private final String itemName = "TestItem2";
+
     By itemInput = By.id("item");
     By salesNavItem  = By.xpath("//*[@id='home_module_list']/div[7]");
     By quantityInput = By.xpath("//*[@id='cart_contents']/tr[1]/td[5]/input");
