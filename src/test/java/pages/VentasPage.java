@@ -6,34 +6,31 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 public class VentasPage {
-    WebDriver driver;
-    private final String itemName = "TestItem2";
+    private final WebDriver driver;
 
-    By itemInput = By.id("item");
-    By salesNavItem  = By.xpath("//*[@id='home_module_list']/div[7]");
-    By quantityInput = By.xpath("//*[@id='cart_contents']/tr[1]/td[5]/input");
-    By agregarPagoBtn = By.id("add_payment_button");
-    By finalizarPagoButton = By.id("finish_sale_button");
-    By codigoDeBarraBoleta = By.xpath("//*[@id='barcode']/img");
-    By tipoPagoBtn = By.cssSelector("button[data-id='payment_types']");
+
+    // Element locators en CamelCase
+    private final By itemInput = By.id("item");
+    private final By salesNavItem = By.xpath("//*[@id='home_module_list']/div[7]");
+    private final By quantityInput = By.xpath("//*[@id='cart_contents']/tr[1]/td[5]/input");
+    private final By agregarPagoButton = By.id("add_payment_button");
+    private final By finalizarPagoButton = By.id("finish_sale_button");
+    private final By codigoBarraBoleta = By.xpath("//*[@id='barcode']/img");
+    private final By tipoPagoDropdown = By.cssSelector("button[data-id='payment_types']");
 
     public VentasPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public boolean loadVentas() {
+    public boolean cargarModuloVentas() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
         try {
-            // Espera hasta que el módulo de inicio esté visible
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("home_module_list")));
-
-            // Luego espera a que el módulo de ventas (div[7]) esté presente y clickeable
             wait.until(ExpectedConditions.elementToBeClickable(salesNavItem)).click();
-
             return true;
         } catch (Exception e) {
             System.out.println("No se pudo cargar el módulo de ventas: " + e.getMessage());
@@ -41,47 +38,50 @@ public class VentasPage {
         }
     }
 
-
-    public boolean agregaItem(){
+    public boolean agregarItemAVenta(String nombreProducto, String cantidadStr) {
         try {
-            WebElement elementItemInput = driver.findElement(itemInput);
-            elementItemInput.sendKeys(itemName);
+            int cantidad = Integer.parseInt(cantidadStr);  // Validar cantidad
+            WebElement input = driver.findElement(itemInput);
+            input.clear();
+            input.sendKeys(nombreProducto);
+
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/ul[1]/li")));
-            elementItemInput.sendKeys(Keys.DOWN,Keys.RETURN);
-            driver.findElement(quantityInput).sendKeys(Keys.CONTROL+"a");
-            driver.findElement(quantityInput).sendKeys(Keys.DELETE);
-            driver.findElement(quantityInput).sendKeys("3");
-            driver.findElement(quantityInput).sendKeys(Keys.ENTER); //Sin esto no toma los cambios el formulario para el calculo de precio
+            input.sendKeys(Keys.DOWN, Keys.RETURN);
+
+            WebElement cantidadInputEl = driver.findElement(quantityInput);
+            cantidadInputEl.sendKeys(Keys.CONTROL + "a");
+            cantidadInputEl.sendKeys(Keys.DELETE);
+            cantidadInputEl.sendKeys(String.valueOf(cantidad));
+            cantidadInputEl.sendKeys(Keys.ENTER);
+
             Thread.sleep(2000);
             return true;
         } catch (Exception e) {
-            System.out.print(e.getMessage());
+            System.out.print("Error al agregar item con cantidad: " + e.getMessage());
             return false;
         }
-
     }
 
-    public boolean pagar(String tipoPago) {
+
+    public boolean realizarPago(String tipoPago) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        By opcionPago = By.xpath("//div[@class='dropdown-menu open']//span[contains(text(), '"+ tipoPago + "')]");//Bootstrap hace que los divs sean input tipo select
+        By opcionPago = By.xpath("//div[@class='dropdown-menu open']//span[contains(text(), '" + tipoPago + "')]");
         try {
+            WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(tipoPagoDropdown));
+            dropdown.click();
 
-            WebElement dropdownButton = wait.until(ExpectedConditions.elementToBeClickable(tipoPagoBtn));
-            dropdownButton.click();
-
-            WebElement option = wait.until(ExpectedConditions.elementToBeClickable(opcionPago));
-            option.click();
-
-            driver.findElement(agregarPagoBtn).click();
+            WebElement opcion = wait.until(ExpectedConditions.elementToBeClickable(opcionPago));
+            opcion.click();
+            Thread.sleep(2000);
+            driver.findElement(agregarPagoButton).click();
             Thread.sleep(2000);
             driver.findElement(finalizarPagoButton).click();
-            return !driver.findElements(codigoDeBarraBoleta).isEmpty(); //verifica si existe codigo de barra de boleta
+
+            return !driver.findElements(codigoBarraBoleta).isEmpty(); // Verifica éxito con boleta
         } catch (Exception e) {
             System.out.print(e.getMessage());
             return false;
         }
     }
-
-
 }
