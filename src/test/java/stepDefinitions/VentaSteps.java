@@ -23,6 +23,12 @@ public class VentaSteps {
         Assert.assertTrue("No se pudo agregar el producto con cantidad", ventasPage.agregarItemAVenta(producto, cantidad, dscto));
     }
 
+    @And("el usuario elimina el producto {string} de la venta")
+    public void elUsuarioEliminaElProductoDeLaVenta(String nombreProducto) {
+        Assert.assertTrue("No se pudo eliminar el producto: " + nombreProducto,
+                ventasPage.eliminarProducto(nombreProducto));
+    }
+
     @And("el usuario selecciona el cliente {string}")
     public void elUsuarioSeleccionaElCliente(String nombreCliente) {
         Assert.assertTrue("No se pudo seleccionar el cliente", ventasPage.agregarCliente(nombreCliente));

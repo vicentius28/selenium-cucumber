@@ -10,6 +10,7 @@ Feature: Realizar venta en sistema OSPOS
     Given el usuario ingresa al módulo de ventas
     And el usuario agrega el producto "producto_test1" con cantidad "1" y dscto "10" a la venta
     And el usuario agrega el producto "producto_test2" con cantidad "2" y dscto "0" a la venta
+    And el usuario elimina el producto "producto_test2" de la venta
     And el usuario selecciona el cliente "Pepe_test123 Doe"
     When el usuario procede al pago
     And selecciona el método de pago "Debit Card" e ingresa el monto exacto

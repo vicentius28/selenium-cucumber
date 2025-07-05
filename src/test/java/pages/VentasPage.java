@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.Utils;
 import java.time.Duration;
+import java.util.List;
 
 public class VentasPage {
     private final WebDriver driver;
@@ -89,9 +90,33 @@ public class VentasPage {
         }
     }
 
+    public boolean eliminarProducto(String nombreProducto) {
+        try {
+            List<WebElement> filas = driver.findElements(By.xpath("//tbody/tr"));
+            for (WebElement fila : filas) {
+                String textoFila = fila.getText();
+                if (textoFila.contains(nombreProducto)) {
+                    // Dentro de la fila encontrada, buscar el botón Delete (el span anidado)
+                    WebElement botonDelete = fila.findElement(By.xpath(".//td[1]/span[1]/span[1]"));
+                    botonDelete.click();
+                    Utils.delay(1000);
+                    return true;
+
+                }
+            }
+            System.out.println("Producto no encontrado: " + nombreProducto);
+            return false;
+        } catch (Exception e) {
+            System.out.println("Error al eliminar producto: " + e.getMessage());
+            return false;
+        }
+    }
+
 
     public boolean agregarCliente(String nombreCliente) {
         try {
+            Utils.delay(1000);
+
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             WebElement input = wait.until(ExpectedConditions.elementToBeClickable(customerInput));
 
