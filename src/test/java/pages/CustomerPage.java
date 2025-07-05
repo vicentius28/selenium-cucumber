@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.Utils;
 
 import java.time.Duration;
 
@@ -44,6 +45,7 @@ public class CustomerPage {
 
     public void submitForm() {
         driver.findElement(submitButton).click();
+        Utils.delay(4000);
     }
 
     public boolean isFirstNameErrorVisible() {

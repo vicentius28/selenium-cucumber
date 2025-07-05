@@ -15,7 +15,8 @@ public class ItemPage {
     }
 
     private final By itemModule = By.xpath("//a[normalize-space()='Items']");
-    private final By newItemButton = By.cssSelector("button[title='New Item']");
+    private final By newItemButton = By.xpath("//button[@title='New Item']");
+
     private final By submitButton = By.id("submit");
     private final By successMessage = By.cssSelector(".alert-success"); // ajusta si es necesario
 
@@ -39,21 +40,50 @@ public class ItemPage {
         driver.findElement(newItemButton).click();
     }
 
-    public void registrarItemBasico(String nombre, String categoria, String costo, String precio, String stock, String recibidos, String nivelReorden) {
-        driver.findElement(itemNameInput).sendKeys(nombre);
-        driver.findElement(categoryInput).sendKeys(categoria);
-        driver.findElement(itemPriceInput).clear();
-        driver.findElement(itemPriceInput).sendKeys(costo);
-        driver.findElement(retailPriceInput).clear();
-        driver.findElement(retailPriceInput).sendKeys(precio);
-        driver.findElement(quantityInput).clear();
-        driver.findElement(quantityInput).sendKeys(stock);
-        driver.findElement(receivingInput).clear();
-        driver.findElement(receivingInput).sendKeys(recibidos);
-        driver.findElement(reorderInput).clear();
-        driver.findElement(reorderInput).sendKeys(nivelReorden);
-        driver.findElement(submitButton).click();
+    public void reabrirFormularioNuevoItem() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.elementToBeClickable(newItemButton)).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(itemNameInput));
     }
+    public void registrarItemBasico(String nombre, String categoria, String costo, String precio, String stock, String recibidos, String nivelReorden) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        WebElement nameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(itemNameInput));
+        nameInput.clear();
+        nameInput.sendKeys(nombre);
+
+        WebElement category = driver.findElement(categoryInput);
+        category.clear();
+        category.sendKeys(categoria);
+
+        WebElement cost = driver.findElement(itemPriceInput);
+        cost.clear();
+        cost.sendKeys(costo);
+
+        WebElement price = driver.findElement(retailPriceInput);
+        price.clear();
+        price.sendKeys(precio);
+
+        WebElement quantity = driver.findElement(quantityInput);
+        quantity.clear();
+        quantity.sendKeys(stock);
+
+        WebElement received = driver.findElement(receivingInput);
+        received.clear();
+        received.sendKeys(recibidos);
+
+        WebElement reorder = driver.findElement(reorderInput);
+        reorder.clear();
+        reorder.sendKeys(nivelReorden);
+
+        driver.findElement(submitButton).click();
+
+        // Esperar mensaje de éxito y volver a abrir el formulario
+        wait.until(ExpectedConditions.visibilityOfElementLocated(successMessage));
+        reabrirFormularioNuevoItem();
+    }
+
+
 
 
     public boolean mensajeExitoVisible() {

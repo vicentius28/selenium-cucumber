@@ -1,10 +1,11 @@
 package runners;
 
 import org.junit.runner.RunWith;
-import io.cucumber.junit.Cucumber;
+import org.junit.runners.Suite;
 import io.cucumber.junit.CucumberOptions;
 
-@RunWith(Cucumber.class)
+
+
 @CucumberOptions(
         features = "src/test/resources/features",
         glue = {"stepDefinitions", "hooks"},
@@ -15,4 +16,16 @@ import io.cucumber.junit.CucumberOptions;
         },
         monochrome = true
 )
-public class TestRunnerAll {}
+
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+        TestRunnerCustomers.class,
+        TestRunnerSuppliers.class,
+        TestRunnerItems.class,
+        TestRunnerVentas.class,
+        TestRunnerDelete.class
+
+})
+public class TestRunnerAll {
+
+}

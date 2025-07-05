@@ -8,5 +8,4 @@ Feature: Registrar un supplier
     And el usuario ingresa al módulo suppliers
     And el usuario abre el formulario de nuevo supplier
     And el usuario ingresa company "proveedor_test123", categoría "Goods Supplier", nombre "Test", apellido "Auto" y presiona submit
-    And elimina el proveedor "proveedor_test123"
     Then se muestra mensaje de éxito tras registrar supplier

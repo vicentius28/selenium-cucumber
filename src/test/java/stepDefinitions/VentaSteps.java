@@ -18,11 +18,15 @@ public class VentaSteps {
     }
 
 
-    @And("el usuario agrega el producto {string} con cantidad {string} a la venta")
-    public void elUsuarioAgregaElProductoConCantidadALaVenta(String producto, String cantidad) {
-        Assert.assertTrue("No se pudo agregar el producto con cantidad", ventasPage.agregarItemAVenta(producto, cantidad));
+    @And("el usuario agrega el producto {string} con cantidad {string} y dscto {string} a la venta")
+    public void elUsuarioAgregaElProductoConCantidadALaVenta(String producto, String cantidad, String dscto) {
+        Assert.assertTrue("No se pudo agregar el producto con cantidad", ventasPage.agregarItemAVenta(producto, cantidad, dscto));
     }
 
+    @And("el usuario selecciona el cliente {string}")
+    public void elUsuarioSeleccionaElCliente(String nombreCliente) {
+        Assert.assertTrue("No se pudo seleccionar el cliente", ventasPage.agregarCliente(nombreCliente));
+    }
 
 
     @When("el usuario procede al pago")
@@ -31,14 +35,21 @@ public class VentaSteps {
     }
 
     @And("selecciona el método de pago {string} e ingresa el monto exacto")
-    public void seleccionaMetodoDePagoEIngresaMontoExacto(String tipoPago) {
-        Assert.assertTrue("Error al realizar el pago", ventasPage.realizarPago(tipoPago));
+    public void seleccionarMetodoPago(String tipoPago) {
+        ventasPage.seleccionarMetodoPagoYAgregar(tipoPago);
     }
 
     @And("confirma la venta")
-    public void confirmaLaVenta() {
-        // Este paso ya está incluido dentro de realizarPago()
+    public void confirmarVenta() {
+        Assert.assertTrue("La venta no se completó con éxito", ventasPage.finalizarVenta());
     }
+
+
+    @And("el usuario ingresa el comentario {string}")
+    public void elUsuarioIngresaComentario(String comentario) {
+        ventasPage.ingresarComentario(comentario);
+    }
+
 
     @Then("se muestra mensaje de éxito tras registrar la venta")
     public void seMuestraMensajeDeExitoTrasRegistrarLaVenta() {
