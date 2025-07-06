@@ -4,6 +4,7 @@ import hooks.Hooks;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.WebDriver;
 import pages.CustomerPage;
+import utils.Utils;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,16 +37,19 @@ public class CustomerSteps {
     @And("selecciona al cliente con nombre {string} y apellido {string}")
     public void seleccionaAlClienteConNombreYApellido(String nombre, String apellido) {
         customerPage.selectCustomer(nombre, apellido);
+        Utils.delay(3000);
     }
 
     @When("presiona el botón de eliminar cliente")
     public void presionarElBotonDeEliminarCliente() {
         customerPage.clickDeleteCustomer();
+        Utils.delay(2000);
     }
 
     @And("acepta el mensaje de confirmación")
     public void aceptaElMensajeDeConfirmacion() {
         driver.switchTo().alert().accept();
+        Utils.delay(3000);
     }
 
 

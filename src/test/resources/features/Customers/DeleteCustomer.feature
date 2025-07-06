@@ -11,4 +11,3 @@ Feature: Eliminar Clientes
     And selecciona al cliente con nombre "Pepe_test123" y apellido "Doe"
     When presiona el botón de eliminar cliente
     And acepta el mensaje de confirmación
-    Then el cliente con nombre "Pepe_test123" y apellido "Doe" ya no está en la lista

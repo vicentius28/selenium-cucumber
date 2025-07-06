@@ -39,15 +39,10 @@ public class ItemPage {
         driver.findElement(newItemButton).click();
     }
 
-    public void reopenNewItemForm() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.elementToBeClickable(newItemButton)).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(itemNameInput));
-    }
 
     public void registerBasicItem(String nombre, String categoria, String costo, String precio, String stock, String recibidos, String nivelReorden) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
+        utils.Utils.delay(2000);
         WebElement nameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(itemNameInput));
         nameInput.clear();
         nameInput.sendKeys(nombre);
@@ -77,14 +72,14 @@ public class ItemPage {
         reorder.sendKeys(nivelReorden);
 
         driver.findElement(submitButton).click();
-
-        // Esperar mensaje de éxito y volver a abrir el formulario
+        Utils.delay(3000);
         wait.until(ExpectedConditions.visibilityOfElementLocated(successAlert));
-        reopenNewItemForm();
     }
 
     public boolean isSuccessMessageVisible() {
-        return driver.findElement(successAlert).isDisplayed();
+        return driver.findElement(successAlert).isDisplayed(
+
+        );
     }
 
     public void deleteItemByName(String nombreItem) {
