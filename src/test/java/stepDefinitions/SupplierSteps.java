@@ -1,7 +1,9 @@
 package stepDefinitions;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import pages.SupplierPage;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
@@ -11,27 +13,32 @@ public class SupplierSteps {
     private final WebDriver driver = DriverFactory.getDriver();
     private final SupplierPage supplierPage = new SupplierPage(driver);
 
-    @And("el usuario ingresa al módulo suppliers")
-    public void ingresarModuloSuppliers() {
-        supplierPage.irAModuloSuppliers();
+    @Given("el usuario ingresa al módulo suppliers")
+    public void elUsuarioIngresaAlModuloSuppliers() {
+        supplierPage.goToSuppliersModule();
     }
 
     @And("el usuario abre el formulario de nuevo supplier")
-    public void abrirFormularioNuevoSupplier() {
-        supplierPage.abrirFormularioNuevoSupplier();
+    public void elUsuarioAbreElFormularioDeNuevoSupplier() {
+        supplierPage.openNewSupplierForm();
     }
 
-    @And("el usuario ingresa company {string}, categoría {string}, nombre {string}, apellido {string} y presiona submit")
-    public void registrarSupplierBasico(String company, String categoria, String nombre, String apellido) {
-        supplierPage.registrarSupplierBasico(company, categoria, nombre, apellido);
+    @When("el usuario ingresa company {string}, categoría {string}, nombre {string}, apellido {string} y presiona submit")
+    public void elUsuarioIngresaCompanyCategoriaNombreApellidoYPresionaSubmit(String company, String categoria, String nombre, String apellido) {
+        supplierPage.registerBasicSupplier(company, categoria, nombre, apellido);
     }
-    @And("elimina el proveedor {string}")
-    public void eliminarSupplierConCompany(String proveedor) {
-        supplierPage.eliminarSupplierPorCompany(proveedor);
+    @When("elimina el proveedor {string}")
+    public void eliminarAlProveedor(String proveedor) {
+        supplierPage.deleteSupplierByCompanyName(proveedor);
     }
 
     @Then("se muestra mensaje de éxito tras registrar supplier")
-    public void mensajeExitoSupplier() {
-        Assert.assertTrue("No se muestra mensaje de éxito en supplier", supplierPage.mensajeExitoVisible());
+    public void seMuestraMensajeDeExitoTrasRegistrarSupplier() {
+        Assert.assertTrue("No se muestra mensaje de éxito en supplier", supplierPage.isSuccessAlertVisible());
+    }
+
+    @Then("se muestra mensaje de éxito tras eliminación de suppliers")
+    public void seMuestraMensajeDeExitoTrasEliminacionDeSupplier(){
+        Assert.assertTrue("No apareció el mensaje de éxito", supplierPage.isDeleteSuccessVisible());
     }
 }

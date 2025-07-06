@@ -17,7 +17,7 @@ public class LogoutSteps {
     private final WebDriver driver = Hooks.getDriver();
 
     @When("cierra sesión")
-    public void cerrarSesion() {
+    public void cierraSesion() {
         HeaderPage headerPage = new HeaderPage(driver);
         try {
             headerPage.logout();
@@ -27,7 +27,7 @@ public class LogoutSteps {
     }
 
     @Then("vuelve a la página de login")
-    public void vuelveAPaginaLogin() {
+    public void vuelveALaPaginaDeLogin() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         boolean campoLoginVisible = wait
                 .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-username")))

@@ -14,38 +14,38 @@ public class ItemPage {
         this.driver = driver;
     }
 
-    private final By itemModule = By.xpath("//a[normalize-space()='Items']");
+    private final By itemsModuleLink = By.xpath("//a[normalize-space()='Items']");
     private final By newItemButton = By.xpath("//button[@title='New Item']");
 
     private final By submitButton = By.id("submit");
-    private final By successMessage = By.cssSelector(".alert-success"); // ajusta si es necesario
+    private final By successAlert = By.cssSelector(".alert-success");
 
     private final By itemNameInput = By.id("name");
     private final By categoryInput = By.id("category"); // o el correcto si es diferente
     private final By itemPriceInput = By.id("cost_price");
     private final By retailPriceInput = By.id("unit_price");
-    private final By quantityInput = By.id("quantity_1");
+    private final By stockQuantityInput = By.id("quantity_1");
     private final By receivingInput = By.id("receiving_quantity");
     private final By reorderInput = By.id("reorder_level");
-    private final By deleteButtonBy = By.xpath("//button[@id='delete']");
+    private final By deleteButtonById = By.xpath("//button[@id='delete']");
+    private final By deleteSuccessAlert = By.cssSelector("div[role='alert']");
 
 
-
-
-    public void irAModuloItems() {
-        driver.findElement(itemModule).click();
+    public void goToItemsModule() {
+        driver.findElement(itemsModuleLink).click();
     }
 
-    public void abrirFormularioNuevoItem() {
+    public void openNewItemForm() {
         driver.findElement(newItemButton).click();
     }
 
-    public void reabrirFormularioNuevoItem() {
+    public void reopenNewItemForm() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.elementToBeClickable(newItemButton)).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(itemNameInput));
     }
-    public void registrarItemBasico(String nombre, String categoria, String costo, String precio, String stock, String recibidos, String nivelReorden) {
+
+    public void registerBasicItem(String nombre, String categoria, String costo, String precio, String stock, String recibidos, String nivelReorden) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
         WebElement nameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(itemNameInput));
@@ -64,7 +64,7 @@ public class ItemPage {
         price.clear();
         price.sendKeys(precio);
 
-        WebElement quantity = driver.findElement(quantityInput);
+        WebElement quantity = driver.findElement(stockQuantityInput);
         quantity.clear();
         quantity.sendKeys(stock);
 
@@ -79,18 +79,15 @@ public class ItemPage {
         driver.findElement(submitButton).click();
 
         // Esperar mensaje de éxito y volver a abrir el formulario
-        wait.until(ExpectedConditions.visibilityOfElementLocated(successMessage));
-        reabrirFormularioNuevoItem();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(successAlert));
+        reopenNewItemForm();
     }
 
-
-
-
-    public boolean mensajeExitoVisible() {
-        return driver.findElement(successMessage).isDisplayed();
+    public boolean isSuccessMessageVisible() {
+        return driver.findElement(successAlert).isDisplayed();
     }
 
-    public void eliminarItemPorNombre(String nombreItem) {
+    public void deleteItemByName(String nombreItem) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         Utils.delay(3000);
@@ -98,10 +95,17 @@ public class ItemPage {
         String xpath = String.format("//tr[td[normalize-space()='%s']]//input[@type='checkbox']", nombreItem);
         WebElement checkbox = driver.findElement(By.xpath(xpath));
         checkbox.click();
-        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteButtonBy));
+        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteButtonById));
         deleteButton.click();
         Utils.delay(2000);
         wait.until(ExpectedConditions.alertIsPresent());
         driver.switchTo().alert().accept();
     }
+
+    public boolean isDeleteSuccessVisible() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement alert = wait.until(ExpectedConditions.visibilityOfElementLocated(deleteSuccessAlert));
+        return alert.getText().contains("successfully deleted");
+    }
+
 }

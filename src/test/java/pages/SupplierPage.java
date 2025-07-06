@@ -19,41 +19,40 @@ public class SupplierPage {
         this.driver = driver;
     }
 
-    private final By supplierModule = By.xpath("//a[normalize-space()='Suppliers']");
+    private final By suppliersModuleLink = By.xpath("//a[normalize-space()='Suppliers']");
     private final By newSupplierButton = By.cssSelector("button[title='New Supplier']");
-    private final By submitButton = By.id("submit");
-
+    private final By saveSupplierButton = By.id("submit");
     private final By companyNameInput = By.id("company_name_input");
     private final By categorySelect = By.id("category");
     private final By firstNameInput = By.id("first_name");
     private final By lastNameInput = By.id("last_name");
-    private final By successMessage = By.cssSelector(".alert-success");
-    private final By deleteButtonBy = By.xpath("//button[@id='delete']");
+    private final By successAlert = By.cssSelector(".alert-success");
+    private final By deleteSupplierButton = By.xpath("//button[@id='delete']");
+    private final By deleteSuccessAlert = By.cssSelector("div[role='alert']");
 
 
-
-    public void irAModuloSuppliers() {
-        driver.findElement(supplierModule).click();
+    public void goToSuppliersModule() {
+        driver.findElement(suppliersModuleLink).click();
     }
 
-    public void abrirFormularioNuevoSupplier() {
+    public void openNewSupplierForm() {
         driver.findElement(newSupplierButton).click();
     }
 
-    public void registrarSupplierBasico(String company, String categoria, String nombre, String apellido) {
+    public void registerBasicSupplier(String company, String categoria, String nombre, String apellido) {
         driver.findElement(companyNameInput).sendKeys(company);
         new Select(driver.findElement(categorySelect)).selectByVisibleText(categoria);
         driver.findElement(firstNameInput).sendKeys(nombre);
         driver.findElement(lastNameInput).sendKeys(apellido);
         Utils.delay(3000);
-        driver.findElement(submitButton).click();
+        driver.findElement(saveSupplierButton).click();
     }
 
-    public boolean mensajeExitoVisible() {
-        return driver.findElement(successMessage).isDisplayed();
+    public boolean isSuccessAlertVisible() {
+        return driver.findElement(successAlert).isDisplayed();
     }
 
-    public void eliminarSupplierPorCompany(String companyItem) {
+    public void deleteSupplierByCompanyName(String companyItem) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         Utils.delay(3000);
@@ -61,12 +60,16 @@ public class SupplierPage {
         String xpath = String.format("//tr[td[normalize-space()='%s']]//input[@type='checkbox']", companyItem);
         WebElement checkbox = driver.findElement(By.xpath(xpath));
         checkbox.click();
-        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteButtonBy));
+        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteSupplierButton));
         deleteButton.click();
         Utils.delay(2000);
         wait.until(ExpectedConditions.alertIsPresent());
         driver.switchTo().alert().accept();
     }
 
-
+    public boolean isDeleteSuccessVisible() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement alert = wait.until(ExpectedConditions.visibilityOfElementLocated(deleteSuccessAlert));
+        return alert.getText().contains("successfully deleted");
+    }
 }

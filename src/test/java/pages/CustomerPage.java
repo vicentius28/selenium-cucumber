@@ -13,17 +13,14 @@ import java.time.Duration;
 public class CustomerPage {
     private final WebDriver driver;
 
-    private final By customerModule = By.xpath("//a[normalize-space()='Customers']");
+    private final By customersModuleLink = By.xpath("//a[normalize-space()='Customers']");
     private final By newCustomerButton = By.cssSelector("button[title='New Customer']");
     private final By firstNameInput = By.xpath("//input[@id='first_name']");
     private final By lastNameInput = By.xpath("//input[@id='last_name']");
-    private final By submitButton = By.xpath("//button[@id='submit']");
+    private final By saveCustomerButton = By.xpath("//button[@id='submit']");
     private final By errorFirstName = By.cssSelector("label#first_name-error.has-error");
     private final By errorLastName = By.cssSelector("label#last_name-error.has-error");
-    private final By deleteButtonBy = By.xpath("//button[@id='delete']");
-
-
-
+    private final By deleteCustomerButton = By.xpath("//button[@id='delete']");
 
 
     public CustomerPage(WebDriver driver) {
@@ -35,7 +32,7 @@ public class CustomerPage {
     }
 
     public void clickModuleCustomer() {
-        driver.findElement(customerModule).click();
+        driver.findElement(customersModuleLink).click();
     }
 
     public void registerCustomer(String name, String lastName) {
@@ -44,7 +41,7 @@ public class CustomerPage {
     }
 
     public void submitForm() {
-        driver.findElement(submitButton).click();
+        driver.findElement(saveCustomerButton).click();
         Utils.delay(4000);
     }
 
@@ -69,20 +66,20 @@ public class CustomerPage {
                 .isDisplayed();
     }
 
-    public void seleccionarCliente(String nombre, String apellido) {
+    public void selectCustomer(String nombre, String apellido) {
         String xpath = String.format("//tr[td[normalize-space()='%s'] and td[normalize-space()='%s']]//input[@type='checkbox']", apellido, nombre);
         WebElement checkbox = driver.findElement(By.xpath(xpath));
         checkbox.click();
     }
 
-    public void clickEliminarCliente() {
+    public void clickDeleteCustomer() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteButtonBy));
+        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteCustomerButton));
         deleteButton.click();
     }
 
 
-    public boolean clienteFueEliminado(String nombre, String apellido) {
+    public boolean isCustomerDeleted(String nombre, String apellido) {
         String xpath = String.format("//tr[td[normalize-space()='%s'] and td[normalize-space()='%s']]", nombre, apellido);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
 

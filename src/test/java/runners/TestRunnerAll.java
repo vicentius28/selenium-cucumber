@@ -3,7 +3,10 @@ package runners;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import io.cucumber.junit.CucumberOptions;
-
+import runners.customers.TestRunnerCustomers;
+import runners.item.TestRunnerItems;
+import runners.suppliers.TestRunnerSuppliers;
+import runners.venta.TestRunnerVentas;
 
 
 @CucumberOptions(
@@ -22,9 +25,7 @@ import io.cucumber.junit.CucumberOptions;
         TestRunnerCustomers.class,
         TestRunnerSuppliers.class,
         TestRunnerItems.class,
-        TestRunnerVentas.class,
-        TestRunnerDelete.class
-
+        TestRunnerVentas.class
 })
 public class TestRunnerAll {
 

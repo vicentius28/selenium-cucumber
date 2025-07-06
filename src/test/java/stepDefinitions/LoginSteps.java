@@ -19,18 +19,18 @@ public class LoginSteps {
     private LoginPage loginPage;
 
     @Given("el usuario está en la página de login")
-    public void usuarioEnPaginaLogin() {
+    public void elUsuarioEstaEnLaPaginaDeLogin() {
         loginPage = new LoginPage(driver);
         loginPage.open();
     }
 
     @When("ingresa el usuario {string} y la contraseña {string}")
-    public void ingresarCredenciales(String usuario, String contrasenia) {
+    public void ingresaElUsuarioYLaContrasenia(String usuario, String contrasenia) {
         loginPage.login(usuario, contrasenia);
     }
 
     @Then("accede al sistema correctamente")
-    public void accesoCorrectoAlDashboard() {
+    public void accedeAlSistemaCorrectamente() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
         boolean textoVisible = wait.until(ExpectedConditions
@@ -48,7 +48,7 @@ public class LoginSteps {
 
 
     @Then("se muestra un mensaje de error")
-    public void mostrarMensajeDeError() {
+    public void seMuestraUnMensajeDeError() {
         assertTrue("No se mostró mensaje de error", loginPage.isLoginErrorVisible());
     }
 }

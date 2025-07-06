@@ -12,45 +12,45 @@ public class CustomerSteps {
     WebDriver driver = Hooks.getDriver();
     CustomerPage customerPage = new CustomerPage(driver);
 
-    @And("el usuario ingresa al modulo customers")
-    public void ingresaModulo() {
+    @Given("el usuario ingresa al modulo customers")
+    public void elUsuarioIngresaAlModuloCustomers() {
         customerPage.clickModuleCustomer();
     }
 
     @And("el usuario abre el formulario de nuevo cliente")
-    public void abrirFormularioNuevoCliente() {
+    public void elUsuarioAbreElFormularioDeNuevoCliente() {
         customerPage.openNewCustomerForm();
     }
 
-    @And("el usuario deja los campos obligatorios vacios y presiona submit")
-    public void dejaCamposVacios() {
+    @When("el usuario deja los campos obligatorios vacios y presiona submit")
+    public void elUsuarioDejaLosCamposObligatoriosVaciosYPresionaSubmit() {
         customerPage.submitForm();
     }
 
-    @And("el usuario ingresa su nombre {string}, apellido {string} y presiona submit")
-    public void registroCliente(String nombre, String apellido){
+    @When("el usuario ingresa su nombre {string}, apellido {string} y presiona submit")
+    public void elUsuarioIngresaSuNombreApellidoYPresionaSubmit(String nombre, String apellido){
         customerPage.registerCustomer(nombre, apellido);
         customerPage.submitForm();
     }
 
     @And("selecciona al cliente con nombre {string} y apellido {string}")
-    public void seleccionarCliente(String nombre, String apellido) {
-        customerPage.seleccionarCliente(nombre, apellido);
+    public void seleccionaAlClienteConNombreYApellido(String nombre, String apellido) {
+        customerPage.selectCustomer(nombre, apellido);
     }
 
-    @And("presiona el botón de eliminar cliente")
-    public void presionarEliminar() {
-        customerPage.clickEliminarCliente();
+    @When("presiona el botón de eliminar cliente")
+    public void presionarElBotonDeEliminarCliente() {
+        customerPage.clickDeleteCustomer();
     }
 
     @And("acepta el mensaje de confirmación")
-    public void aceptarAlerta() {
+    public void aceptaElMensajeDeConfirmacion() {
         driver.switchTo().alert().accept();
     }
 
 
     @Then("se muestran errores por campos obligatorios")
-    public void verificaErrores() {
+    public void seMuestranErroresPorCamposObligatorios() {
         boolean firstNameError = customerPage.isFirstNameErrorVisible();
         boolean lastNameError = customerPage.isLastNameErrorVisible();
 
@@ -62,17 +62,13 @@ public class CustomerSteps {
         System.out.println("Validación de errores obligatorios completada con éxito.");
     }
 
-
-
     @Then("se muestra mensaje de exito tras registro")
-    public void registroExitoso(){
+    public void seMuestraMensajeDeExitoTrasRegistro(){
         assertTrue(customerPage.isCustomerRegistered());
     }
+
     @Then("el cliente con nombre {string} y apellido {string} ya no está en la lista")
-    public void verificarClienteEliminado(String nombre, String apellido) {
-
-        assertTrue("El cliente aún está en la lista", customerPage.clienteFueEliminado(nombre, apellido));
+    public void elClienteConNombreYApellidoYaNoEstaEnLaLista(String nombre, String apellido) {
+        assertTrue("El cliente aún está en la lista", customerPage.isCustomerDeleted(nombre, apellido));
     }
-
-
 }
