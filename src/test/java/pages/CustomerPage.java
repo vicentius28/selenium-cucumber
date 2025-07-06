@@ -1,14 +1,11 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.Utils;
-
 import java.time.Duration;
+import java.util.List;
 
 public class CustomerPage {
     private final WebDriver driver;
@@ -21,7 +18,7 @@ public class CustomerPage {
     private final By errorFirstName = By.cssSelector("label#first_name-error.has-error");
     private final By errorLastName = By.cssSelector("label#last_name-error.has-error");
     private final By deleteCustomerButton = By.xpath("//button[@id='delete']");
-
+    private final By searchInput = By.xpath("//*[@id='table_holder']/div[1]/div[1]/div[3]/input");
 
     public CustomerPage(WebDriver driver) {
         this.driver = driver;
@@ -41,6 +38,10 @@ public class CustomerPage {
     }
 
     public void submitForm() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("#customer_basic_info fieldset")
+        ));
         driver.findElement(saveCustomerButton).click();
         Utils.delay(4000);
     }
@@ -94,7 +95,64 @@ public class CustomerPage {
         }
     }
 
+    public boolean searchClient(String nombre, String apellido){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        try {
 
+            System.out.println("Esperando que la caja de texto de busqueda sea visible");
+            WebElement searchElement = wait.until(ExpectedConditions.visibilityOfElementLocated(searchInput));
+            searchElement.click();
+            searchElement.sendKeys(nombre+" "+apellido);
+            searchElement.sendKeys(Keys.RETURN);
+            Utils.delay(500);//Por seguridad, espera respuesta JS
+            wait.until(ExpectedConditions.invisibilityOfElementLocated((
+                    By.xpath("//*[@id='table_holder']/div[1]/div[2]/div[2]/div[1]/span/span[1]")//wrapper de alerta de espera de busqueda
+            )));
 
+            //Espera a que cargue la busqueda y Se verifica contenido en la tabla de clientes
+            System.out.println("Se verifica que resultado de busqueda sea unico");
+
+            List<WebElement> rows = wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector("#table tbody tr"), 0));;
+            if(rows.isEmpty()) {
+                System.out.println("No se encontro cliente");
+                return false;
+            }
+
+            if(rows.size()> 1){
+                System.out.println("Se encontro mas de un cliente");
+                return false;
+            }
+        }
+        catch (Exception e){
+            System.out.println("Excepción al buscar cliente: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean verificaBusqueda(String nombre, String apellido){
+
+        System.out.println("Se verifican datos encontrados");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        List<WebElement> rows = driver.findElements(By.cssSelector("#table tbody tr"));
+        WebElement row = rows.get(0);
+        wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(row, By.tagName("td")));
+        List<WebElement> cells = row.findElements(By.tagName("td"));
+        System.out.println("Verificacion de nombre y apellido");
+        String cellLastName = cells.get(2).getText().trim();
+        String cellFirstName = cells.get(3).getText().trim();
+        if(!cellFirstName.equalsIgnoreCase(nombre)){
+            System.out.println("Nombre de cliente encontrado no coincide");
+            return false;
+        }
+
+        if (!cellLastName.equalsIgnoreCase(apellido)){
+            System.out.println("Apellido de cliente encontrado no coincide");
+            return false;
+        }
+
+        return true;
+    }
 
 }

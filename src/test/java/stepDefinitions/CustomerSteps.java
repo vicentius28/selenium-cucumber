@@ -75,4 +75,12 @@ public class CustomerSteps {
     public void elClienteConNombreYApellidoYaNoEstaEnLaLista(String nombre, String apellido) {
         assertTrue("El cliente aún está en la lista", customerPage.isCustomerDeleted(nombre, apellido));
     }
+    @When("busca cliente de nombre {string} y apellido {string}")
+    public void buscaClienteDeNombreYApellido(String nombre, String apellido){
+        assertTrue("No se encuentra cliente", customerPage.searchClient(nombre, apellido));
+    }
+    @Then ("verifica busqueda de nombre {string} y apellido {string}")
+    public void verificaBusquedaDeNombreYApellido(String nombre, String apellido){
+        assertTrue("Nombre de cliente no corresponde", customerPage.verificaBusqueda(nombre, apellido));
+    }
 }
