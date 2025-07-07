@@ -5,7 +5,9 @@ import org.junit.runners.Suite;
 import io.cucumber.junit.CucumberOptions;
 import runners.Delete.TestRunnerDelete;
 import runners.customers.TestRunnerCustomers;
+import runners.item.TestRunnerDeleteItems;
 import runners.item.TestRunnerItems;
+import runners.recievings.TestRunnerRecievings;
 import runners.suppliers.TestRunnerSuppliers;
 import runners.venta.TestRunnerVentas;
 
@@ -26,6 +28,7 @@ import runners.venta.TestRunnerVentas;
         TestRunnerCustomers.class,
         TestRunnerSuppliers.class,
         TestRunnerItems.class,
+        TestRunnerRecievings.class,
         TestRunnerVentas.class,
         TestRunnerDelete.class
 })
