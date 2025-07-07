@@ -1,4 +1,4 @@
-Feature: Eliminar Clientes
+Feature: Buscar Clientes
 
   Background:
     Given el usuario está en la página de login
