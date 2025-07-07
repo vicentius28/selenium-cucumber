@@ -9,6 +9,7 @@ import runners.item.TestRunnerDeleteItems;
 import runners.item.TestRunnerItems;
 import runners.recievings.TestRunnerRecievings;
 import runners.suppliers.TestRunnerSuppliers;
+import runners.venta.TestRunnerAnularVentas;
 import runners.venta.TestRunnerVentas;
 
 
@@ -30,6 +31,7 @@ import runners.venta.TestRunnerVentas;
         TestRunnerItems.class,
         TestRunnerRecievings.class,
         TestRunnerVentas.class,
+        TestRunnerAnularVentas.class,
         TestRunnerDelete.class
 })
 public class TestRunnerAll {

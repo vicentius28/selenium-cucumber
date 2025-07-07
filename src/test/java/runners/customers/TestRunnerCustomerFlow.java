@@ -1,4 +1,14 @@
 package runners.customers;
 
-public class TestRunnerCustomerFlow {
-}
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        features = "src/test/resources/features/flows/CustomerFlow.feature",
+        glue = {"stepDefinitions", "hooks"},
+        plugin = {"pretty", "html:target/reports/customers-report.html"},
+        monochrome = true
+)
+public class TestRunnerCustomerFlow {}

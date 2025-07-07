@@ -8,7 +8,9 @@ Feature: Flujo completo de gestión de clientes
   @flujo_cliente
   Scenario: Registrar, buscar y eliminar cliente
     Given el usuario ingresa al modulo customers
+    And el usuario abre el formulario de nuevo cliente
     When el usuario ingresa su nombre "Juan", apellido "Perez" y presiona submit
     When busca cliente de nombre "Juan" y apellido "Perez"
+    And selecciona al cliente con nombre "Juan" y apellido "Perez"
     When presiona el botón de eliminar cliente
     And acepta el mensaje de confirmación

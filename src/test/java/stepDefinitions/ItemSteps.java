@@ -33,6 +33,11 @@ public class ItemSteps {
         itemPage.deleteItemByName(nombre);
     }
 
+    @And("el usuario vuelve al home")
+    public void elUsuarioVuelveAlHome(){
+        itemPage.goToHome();
+    }
+
     @Then("se muestra mensaje de éxito tras registro")
     public void seMuestraMensajeDeExitoTrasRegistro() {
         Assert.assertTrue("No se muestra mensaje de éxito", itemPage.isSuccessMessageVisible());

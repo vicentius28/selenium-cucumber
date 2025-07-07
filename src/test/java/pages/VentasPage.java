@@ -20,8 +20,7 @@ public class VentasPage {
     private final By quantityInput = By.xpath("//*[@id='cart_contents']/tr[1]/td[5]/input");
     private final By suggestionItem = By.xpath("//ul[contains(@id,'ui-id')]/li");
     private final By discountInput = By.xpath("//input[@name='discount']");
-
-
+    private final By dailySales = By.xpath("(//a[@id='sales_takings_button'])[1]");
     private final By agregarPagoButton = By.id("add_payment_button");
     private final By finalizarPagoButton = By.id("finish_sale_button");
     private final By codigoBarraBoleta = By.xpath("//*[@id='barcode']/img");
@@ -30,6 +29,9 @@ public class VentasPage {
     private final By customerSuggestion = By.xpath("//ul[contains(@id,'ui-id')]/li");
     private final By selectedCustomer = By.xpath("//a[@title='Update Customer']");
     private final By commentTextarea = By.id("comment");
+    private final By deleteSalesButton = By.xpath("//button[@id='delete']");
+    private final By deleteSuccessAlert = By.cssSelector("div[role='alert']");
+
 
     public VentasPage(WebDriver driver) {
         this.driver = driver;
@@ -143,7 +145,6 @@ public class VentasPage {
     }
 
 
-
     public void seleccionarMetodoPagoYAgregar(String tipoPago) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         By opcionPago = By.xpath("//div[@class='dropdown-menu open']//span[contains(text(), '" + tipoPago + "')]");
@@ -190,6 +191,42 @@ public class VentasPage {
             System.out.println("Error al finalizar venta: " + e.getMessage());
             return false;
         }
+    }
+
+    public void clickDailySales() {
+        driver.findElement(dailySales).click();
+    }
+
+    public void selectSales(String customer, String amount) {
+        String xpath = String.format(
+                "//tr[td[normalize-space()='%s'] and td[normalize-space()='%s']]//input[@type='checkbox']",
+                customer, amount
+        );
+        WebElement checkbox = driver.findElement(By.xpath(xpath));
+        checkbox.click();
+    }
+
+    public void clickDeleteSales() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement deleteButton = wait.until(ExpectedConditions.elementToBeClickable(deleteSalesButton));
+        deleteButton.click();
+
+        // Aceptar el alert que aparece
+        try {
+            WebDriverWait alertWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            alertWait.until(ExpectedConditions.alertIsPresent());
+            driver.switchTo().alert().accept(); // Acepta el alert
+            System.out.println("Alerta de confirmación aceptada correctamente.");
+        } catch (Exception e) {
+            System.out.println("No se pudo aceptar el alert: " + e.getMessage());
+        }
+    }
+
+
+    public boolean isDeleteSuccessVisible() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement alert = wait.until(ExpectedConditions.visibilityOfElementLocated(deleteSuccessAlert));
+        return alert.getText().contains("successfully deleted");
     }
 
 }

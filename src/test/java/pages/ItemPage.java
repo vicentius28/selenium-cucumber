@@ -103,4 +103,10 @@ public class ItemPage {
         return alert.getText().contains("successfully deleted");
     }
 
+    public void goToHome() {
+        driver.get("http://localhost/ospos/public/home");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("home_module_list")));
+    }
+
 }

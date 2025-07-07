@@ -34,16 +34,32 @@ public class VentaSteps {
         Assert.assertTrue("No se pudo seleccionar el cliente", ventasPage.agregarCliente(nombreCliente));
     }
 
+    @And ("el usuario ingresa a las ventas diarias")
+    public void elUsuarioIngresaALasVentasDiarias(){
+        ventasPage.clickDailySales();
+    }
+
+    @And("selecciona la venta con el cliente {string} y amount {string}")
+    public void seleccionaLaVentaConFechaClienteYMonto(String customer, String amount){
+        ventasPage.selectSales(customer, amount);
+    }
+
 
     @When("el usuario procede al pago")
     public void elUsuarioProcedeAlPago() {
         // No se requiere acción aquí, forma parte del siguiente paso
     }
 
+    @When ("presiona el botón de anular venta")
+    public void presionaElBotonDeAnularVenta(){
+        ventasPage.clickDeleteSales();
+    }
+
     @And("selecciona el método de pago {string} e ingresa el monto exacto")
     public void seleccionarMetodoPago(String tipoPago) {
         ventasPage.seleccionarMetodoPagoYAgregar(tipoPago);
     }
+
 
     @And("confirma la venta")
     public void confirmarVenta() {
@@ -61,5 +77,10 @@ public class VentaSteps {
     public void seMuestraMensajeDeExitoTrasRegistrarLaVenta() {
         // Ya validado en realizarPago con presencia del código de barras
         System.out.println("Venta registrada exitosamente.");
+    }
+
+    @Then("acepta el mensaje de confirmación de eliminación de Ventas")
+    public void aceptaElMensajeDeConfirmacionDeEliminacionDeVentas(){
+        Assert.assertTrue("No apareció el mensaje de éxito", ventasPage.isDeleteSuccessVisible());
     }
 }
